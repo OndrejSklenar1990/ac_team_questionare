@@ -1,0 +1,264 @@
+:root {
+  --bg: #f4f6f9;
+  --card-bg: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --primary: #2f5fa8;
+  --primary-dark: #234780;
+  --border: #d9dee5;
+  --accent-bg: #eef2f8;
+  --danger: #b3261e;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16181d;
+    --card-bg: #1f2229;
+    --text: #e7e9ee;
+    --muted: #9aa1ac;
+    --primary: #6f9ceb;
+    --primary-dark: #8fb2f0;
+    --border: #333844;
+    --accent-bg: #262a33;
+    --danger: #ff8a80;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, "Segoe UI", Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+}
+
+header.top {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+header.top h1 {
+  font-size: 1.4rem;
+  margin: 0 0 6px;
+}
+
+header.top p {
+  color: var(--muted);
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.progress {
+  height: 6px;
+  background: var(--border);
+  border-radius: 4px;
+  margin: 20px 0 28px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.25s ease;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.section-title {
+  font-size: 1.15rem;
+  margin: 0 0 6px;
+}
+
+.section-intro {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 18px;
+}
+
+.question {
+  margin-bottom: 26px;
+}
+
+.question:last-child {
+  margin-bottom: 0;
+}
+
+.question-text {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.required-mark {
+  color: var(--danger);
+  margin-left: 2px;
+}
+
+.scale-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.scale-option {
+  flex: 1;
+  text-align: center;
+}
+
+.scale-option label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 8px 4px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+
+.scale-option input {
+  width: 18px;
+  height: 18px;
+}
+
+.scale-option input:checked + span {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.scale-option:has(input:checked) label {
+  border-color: var(--primary);
+  background: var(--accent-bg);
+}
+
+.scale-caption {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.choice-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.choice-option:has(input:checked) {
+  border-color: var(--primary);
+  background: var(--accent-bg);
+}
+
+.choice-option input {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+textarea,
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.other-input {
+  margin-top: 8px;
+}
+
+.pct-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 160px;
+}
+
+.nav-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+button {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 11px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.error-msg {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin-top: 20px;
+  text-align: right;
+}
+
+.thanks {
+  text-align: center;
+  padding: 40px 10px;
+}
+
+.thanks h2 {
+  margin-top: 0;
+}
+
+.small-note {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 10px;
+}

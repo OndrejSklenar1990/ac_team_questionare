@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Výsledky dotazníku</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    table { border-collapse: collapse; width: 100%; font-size: 0.82rem; }
+    th, td { border: 1px solid var(--border); padding: 6px 8px; text-align: left; vertical-align: top; }
+    th { background: var(--accent-bg); position: sticky; top: 0; }
+    .table-scroll { overflow-x: auto; max-width: 100%; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+  </style>
+</head>
+<body>
+  <div class="wrap" style="max-width: 1100px;">
+    <header class="top">
+      <h1>Výsledky dotazníku (jen pro team leadera)</h1>
+    </header>
+
+    <div id="login-box" class="card" style="max-width: 380px; margin: 0 auto;">
+      <h2 class="section-title">Přihlášení</h2>
+      <form id="login-form">
+        <div class="question">
+          <div class="question-text">E-mail</div>
+          <input type="email" id="login-email" required />
+        </div>
+        <div class="question">
+          <div class="question-text">Heslo</div>
+          <input type="password" id="login-password" required />
+        </div>
+        <div id="login-error" class="error-msg" style="display:none;"></div>
+        <div class="nav-row" style="justify-content:flex-end;">
+          <button type="submit" class="btn-primary">Přihlásit</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="data-box" style="display:none;">
+      <div class="top-bar">
+        <span id="count-label"></span>
+        <div style="display:flex; gap:10px;">
+          <button id="btn-export" class="btn-secondary">Export do CSV</button>
+          <button id="btn-logout" class="btn-secondary">Odhlásit</button>
+        </div>
+      </div>
+      <div id="table-wrap" class="card"></div>
+    </div>
+  </div>
+  <script type="module" src="results.js"></script>
+</body>
+</html>
