@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Team Survey Results (Anonymized)</title>
+<style>
+:root {
+  --bg: #f4f6f9;
+  --card-bg: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --primary: #2f5fa8;
+  --border: #d9dee5;
+  --accent-bg: #eef2f8;
+  --bar-bg: #d9dee5;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16181d;
+    --card-bg: #1f2229;
+    --text: #e7e9ee;
+    --muted: #9aa1ac;
+    --primary: #8fb2f0;
+    --border: #333844;
+    --accent-bg: #262a33;
+    --bar-bg: #333844;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, "Segoe UI", Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+}
+.wrap { max-width: 880px; margin: 0 auto; padding: 32px 20px 80px; }
+header.top { text-align: center; margin-bottom: 20px; }
+header.top h1 { font-size: 1.6rem; margin: 0 0 8px; }
+header.top p { color: var(--muted); margin: 4px 0; font-size: 0.95rem; }
+nav.jump {
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+  margin: 20px 0 32px;
+}
+nav.jump a {
+  padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border);
+  color: var(--primary); text-decoration: none; font-size: 0.85rem; font-weight: 600;
+}
+section.block { margin-bottom: 40px; }
+h2.section-title {
+  font-size: 1.2rem; border-bottom: 2px solid var(--primary);
+  padding-bottom: 8px; margin-bottom: 18px;
+}
+.q-card {
+  background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px;
+  padding: 18px 20px; margin-bottom: 16px;
+}
+.q-text { font-weight: 600; margin-bottom: 12px; }
+.q-meta { font-size: 0.75rem; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.03em;}
+.scale-row {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 0.85rem;
+}
+.scale-row .rlabel { width: 28px; color: var(--muted); flex-shrink: 0; }
+.scale-row .bar-outer {
+  flex: 1; background: var(--bar-bg); border-radius: 4px; height: 10px; overflow: hidden;
+}
+.scale-row .bar-inner { height: 100%; background: var(--primary); }
+.scale-row .val { width: 18px; text-align: right; font-weight: 600; flex-shrink: 0; }
+.avg-line { margin-top: 10px; font-size: 0.85rem; color: var(--muted); }
+.avg-line b { color: var(--text); }
+.choice-list { list-style: none; margin: 0; padding: 0; }
+.choice-list li {
+  display: flex; gap: 8px; padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: 0.9rem;
+}
+.choice-list li:last-child { border-bottom: none; }
+.choice-list .rlabel { color: var(--muted); font-weight: 600; width: 32px; flex-shrink: 0; }
+.quote {
+  background: var(--accent-bg); border-radius: 8px; padding: 10px 14px; margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+.quote .rlabel { font-weight: 700; color: var(--primary); margin-right: 6px; }
+.no-answers { color: var(--muted); font-style: italic; font-size: 0.85rem; }
+.top-note {
+  font-size: 0.85rem; color: var(--muted); text-align: center; margin-bottom: 30px;
+  border: 1px dashed var(--border); border-radius: 8px; padding: 10px 16px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Team Survey Results — Anonymized</h1>
+    <p>All 6 team members responded. Respondents are labeled R1–R6 only; no names, dates, or timestamps are shown.</p>
+  </header>
+  <div class="top-note">R1–R6 refer to the same person consistently across every question on this page.</div>
+  <nav class="jump" id="jump-nav"></nav>
+  <div id="content"></div>
+</div>
+
+<script>
+const SECTIONS_META = {
+  A: "A. Allocation & Workload",
+  B: "B. Information Sharing & Communication",
+  C: "C. Project vs. Operational Orientation",
+  D: "D. Interests, Growth & Potential",
+  E: "E. Team Status Updates (2x / week)",
+  F: "F. Feedback on the Team Lead",
+};
+
+const QUESTIONS = [
+  // --- A ---
+  { id:1, section:"A", type:"scale5", text:"How would you rate your current workload?", scaleLabels:["significantly underutilized","","just right","","overloaded"],
+    answers:["2","3","3","1","2","4"] },
+  { id:2, section:"A", type:"percent", text:"Roughly what percentage of your working capacity have you genuinely been allocated to specific tasks/projects over the past 2–3 weeks?",
+    answers:["70","66","60","20","40","90"] },
+  { id:3, section:"A", type:"choice", text:"If you're not fully allocated, what's the main reason?",
+    answers:[
+      "The work doesn't fill my full capacity, but I don't know what else to do",
+      "I'm waiting on input/decisions from someone else",
+      "The work doesn't fill my full capacity, but I don't know what else to do",
+      "The work doesn't fill my full capacity, but I don't know what else to do",
+      "I don't have assigned tasks / I'm waiting to be assigned work",
+      "The work doesn't fill my full capacity, but I don't know what else to do",
+    ]},
+  { id:4, section:"A", type:"choice", text:"When you don't have a formal task, do you know what you should/could be working on?",
+    answers:["Yes","Yes","Yes","No","No","Yes"] },
+  { id:5, section:"A", type:"text", text:"What would help you make better use of your free capacity?",
+    answers:["New tasks.","","Getting authorization to perform IP service upgrades, or to identify template errors, or Jira/Confluence configuration.","I can't answer that.","Better task allocation.",""] },
+
+  // --- B ---
+  { id:6, section:"B", type:"scale5", text:"How often do you share information about what you're working on with the team (outside the formal status)?", scaleLabels:["never","","","","regularly"],
+    answers:["4","5","4","4","3","3"] },
+  { id:7, section:"B", type:"scale5", text:"To what extent do you think the team has a real picture of what you're currently doing?", scaleLabels:["not at all","","","","very good picture"],
+    answers:["3","4","4","5","2","2"] },
+  { id:8, section:"B", type:"choice", text:"Do you think some people on the team don't share information and prefer to keep things to themselves?",
+    answers:["No","No","No","No","Yes","I don't know / prefer not to say"] },
+  { id:9, section:"B", type:"scale5", text:"Are you afraid or reluctant to share your know-how with others on the team?", scaleLabels:["not at all","","","","yes, very much"],
+    answers:["1","1","1","1","1","1"] },
+  { id:10, section:"B", type:"scale5", text:"When you need advice, do you go to someone inside the team first, or do you prefer to contact someone outside the team?", scaleLabels:["always inside the team first","","","","mostly outside the team"],
+    answers:["2","1","2","1","1","2"] },
+  { id:11, section:"B", type:"text", text:"What discourages you most from sharing information in the team chat / distribution list?",
+    answers:["Nothing.","","I'd rather use standups, where information is less likely to get lost, than send it to the team chat, which is flooded with communication about urgent, current issues.","Nothing discourages me.","When I have information to share, I share it.","When I say something, it often happens that either I'm not understood (in which case, just ask) or I end up dealing with it with you [the lead] directly anyway — so I won't make a big fuss about it on the standup."] },
+  { id:12, section:"B", type:"choice", text:"Which way of sharing information would suit you best? (multiple choice)",
+    answers:[
+      "Short written update in chat/channel; short verbal standup; shared document/tool (Confluence, Jira...)",
+      "Short verbal standup; shared document/tool (Confluence, Jira...)",
+      "Short verbal standup",
+      "Other (I can't answer — I'm missing business context)",
+      "Short written update in chat/channel",
+      "Short verbal standup",
+    ]},
+  { id:13, section:"B", type:"choice", text:"Do you consider the team distribution list / shared channel a useful tool for sharing work?",
+    answers:["Yes","Yes","Yes","I don't know – I don't use it","Yes","I don't know – I don't use it"] },
+
+  // --- C ---
+  { id:14, section:"C", type:"scale5", text:"Do you see yourself more as someone suited to long-term projects, or to operations/support?", scaleLabels:["purely projects","","","","purely operations"],
+    answers:["2","3","3","1","2","3"] },
+  { id:15, section:"C", type:"choice", text:"If you had the option to work only on project activity (no operational work), would that be more appealing to you?",
+    answers:["Yes","I don't mind / don't know","I don't mind / don't know","Yes","Yes","No"] },
+  { id:16, section:"C", type:"text", text:"What do you enjoy most about project work, or operational work?",
+    answers:[
+      "Carrying out activities that can be planned (in an ideal world), organizing them to reach specific goals within a relatively fixed timeframe, and coordinating with other colleagues.",
+      "",
+      "Project work — systematic creativity and delivering large bodies of work.\nOperational work — solving issues, detective work, the confrontation with reality as feedback on how something was actually delivered, and the chance for ongoing development and stabilization.",
+      "The timeframe, the defined goals.",
+      "What I enjoy most about project work is that it usually brings something new.",
+      "Operations — varied problems, understanding impacts, learning new things.\nProjects — analysis, design, then testing, and the satisfaction of seeing something work :)",
+    ]},
+  { id:17, section:"C", type:"scale5", text:"To what extent do you feel able to handle operational work (support) independently, without assistance from others?", scaleLabels:["barely independent at all","","","","fully independent"],
+    answers:["1","3","5","1","3","4"] },
+  { id:18, section:"C", type:"choice", text:"What time horizon do you estimate before you'd be able to handle operations fully independently?",
+    answers:["I'm already independent","3–6 months","I'm already independent","Can't estimate","Can't estimate","1–3 months"] },
+
+  // --- D ---
+  { id:19, section:"D", type:"text", text:"Is there an area, technology, or type of task you'd like to spend more time on, but don't currently have the opportunity to?",
+    answers:[
+      "Automated testing, project work — though it's not that there's no opportunity :)",
+      "No.",
+      "I'm interested in AI, and I already have the opportunity to work on it.",
+      "??",
+      "Not at the moment — I'm happy with what I'm working on.",
+      "An overview of BC and OC updates. S4 sends CUs, but new fields keep appearing that aren't described in the CU. I'd focus on the OC standard and BC news — maybe we could use it to our advantage.",
+    ]},
+  { id:20, section:"D", type:"text", text:"What would help you start pursuing that (training, mentoring, time, an assignment)?",
+    answers:["Yes (mentoring, an assignment, training).","","An agreement on some bigger joint delivery in the AI area that we could work on together, and try using AI to meaningfully boost the team's efficiency.","An assignment.","An assignment.","Finished tickets, and probably an assignment so there's a clear goal :) — though for me, English is probably a higher priority right now, and that's what I'm working on."] },
+  { id:21, section:"D", type:"text", text:"Do you see room in the team, or in our work, for an initiative/improvement that nobody is currently addressing?",
+    answers:["Reorganizing testing as a whole.","","Probably not.","Yes.","I don't currently see any specific room for improvement.","Everyone can improve, at least in communication. For example, since I sit apart from the team, I read every reaction in meetings differently, because I can't see the context behind it — it might just be that someone didn't have time to step away."] },
+
+  // --- E ---
+  { id:22, section:"E", type:"scale5", text:"How useful are the current team status updates for you?", scaleLabels:["useless","","","","very useful"],
+    answers:["5","5","5","1","5","4"] },
+  { id:23, section:"E", type:"choice", text:"Are you more in favor of keeping the team statuses in their current form, or of changing/dropping them?",
+    answers:["Keep, but change the format or frequency","Keep unchanged","Keep unchanged","Keep, but change the format or frequency","Keep unchanged","Keep, but change the format or frequency"] },
+  { id:24, section:"E", type:"choice", text:"Why do you often not share any update during the status meetings?",
+    answers:["Other (if there's something I can share, I do — but if an activity is at some stage with no change, I don't report it.)","I don't feel the need to inform others about my work publicly","I usually don't have anything new to report","I usually don't have anything new to report","I usually don't have anything new to report","I don't have time to prepare / I don't know in advance what to say"] },
+  { id:25, section:"E", type:"text", text:"What would increase the value/purpose of the status meetings for you?",
+    answers:["A more concise status — share the update, and if colleagues' help is needed, arrange a separate meeting for that.","","It's probably fine as it is right now.","Not getting into the details of the solution.","I think the current format of the statuses works well.","Move it to Monday, so we know what's ahead of us :) more information about what's coming up and what steps need to be taken."] },
+
+  // --- F ---
+  { id:26, section:"F", type:"scale5", text:"I have sufficient expertise to lead you effectively and help with technical/process decisions.", scaleLabels:["strongly disagree","","","","strongly agree"],
+    answers:["5","5","5","5","5","4"] },
+  { id:27, section:"F", type:"scale5", text:"I communicate priorities and expectations clearly.", scaleLabels:["strongly disagree","","","","strongly agree"],
+    answers:["3","4","4","2","5","3"] },
+  { id:28, section:"F", type:"scale5", text:"I listen to your opinions and take them into account before deciding.", scaleLabels:["strongly disagree","","","","strongly agree"],
+    answers:["3","4","4","5","5","5"] },
+  { id:29, section:"F", type:"scale5", text:"My decisions are respected and followed by the team, even when a team member completely disagrees with them.", scaleLabels:["strongly disagree","","","","strongly agree"],
+    answers:["5","5","4","5","4","4"] },
+  { id:30, section:"F", type:"scale5", reverse:true, text:"It happens that after my decision, things end up being done differently, “their own way,” without it being discussed with me first.", scaleLabels:["never","","","","often"],
+    answers:["1","2","2","1","2","3"] },
+  { id:31, section:"F", type:"text", text:"What would you need more of from me as a leader?",
+    answers:[
+      "Sharing information with the team even when it's “imprecise or uncertain” — it could still help us prepare for things the team or individuals are expecting, even before we know the details.",
+      "",
+      "Probably fine, given the current situation.",
+      "I think more mentoring.",
+      "More ongoing communication and timely responses to questions, workload permitting.",
+      "A better mood at the standup, and not tapping away on the PC during it. It comes across as if you're not present and not listening — even if that's not really the case, that's how it feels. Since we're waiting to see what happens, maybe we should prepare for it strategically as a team — how can we influence things so we stay together as long as possible. Also, go over once more whether we actually want CSOB to extend the contract or not — I've seen how CSOB operates, they have tickets that get switched to vendors like S4 — we could easily take that on ourselves too, i.e. provide them further support, if we wanted to. Clearly state whether that's what we want or not, and if not, why. Not everyone is a strategist who can just accept it when something isn't being addressed.",
+    ]},
+  { id:32, section:"F", type:"text", text:"What would you need less of from me / what bothers you about me?",
+    answers:[
+      "More ongoing verbal communication on shared operational topics.",
+      "",
+      "Probably fine, given the current situation.",
+      "Same as the mentoring request above.",
+      "It occasionally bothers me to wait longer for replies, or situations where a question simply doesn't get a response.",
+      "Tapping on the PC in the morning :) if something bothers me, I'll say so — right now nothing comes to mind.",
+    ]},
+  { id:33, section:"F", type:"text", text:"What do you value most about the way I lead the team?",
+    answers:[
+      "I appreciate that you don't run micromanagement.",
+      "",
+      "The ability to help technically in all areas.",
+      "Calm and expertise.",
+      "I value competence, trust, and the space for independent work. At the same time, I know that if needed, I can turn to you for help.",
+      "You know how to calm things down and defuse emotions, ease a problem, and reassure that it'll get resolved. I can always call you — even when I call and it's not urgent — and that's the most important thing for me.",
+    ]},
+  { id:34, section:"F", type:"text", text:"Is there something you'd like to tell me but haven't said yet?",
+    answers:["Yes.","","","No comment.","No, I don't have anything.","No."] },
+];
+
+function scaleBar(q) {
+  let rows = "";
+  const nums = q.answers.map(Number);
+  const avg = (nums.reduce((a,b)=>a+b,0) / nums.length).toFixed(2);
+  q.answers.forEach((v, i) => {
+    const pct = (Number(v) / 5) * 100;
+    rows += `<div class="scale-row">
+      <span class="rlabel">R${i+1}</span>
+      <div class="bar-outer"><div class="bar-inner" style="width:${pct}%"></div></div>
+      <span class="val">${v}</span>
+    </div>`;
+  });
+  const leftLabel = q.scaleLabels?.[0] || "";
+  const rightLabel = q.scaleLabels?.[4] || "";
+  return `${rows}<div class="avg-line">${leftLabel} &nbsp;↔&nbsp; ${rightLabel} &middot; Average: <b>${avg}</b>${q.reverse ? " (lower = better)" : ""}</div>`;
+}
+
+function percentList(q) {
+  return `<ul class="choice-list">${q.answers.map((v,i)=>`<li><span class="rlabel">R${i+1}</span><span>${v}%</span></li>`).join("")}</ul>`;
+}
+
+function choiceList(q) {
+  return `<ul class="choice-list">${q.answers.map((v,i)=>`<li><span class="rlabel">R${i+1}</span><span>${escapeHtml(v)}</span></li>`).join("")}</ul>`;
+}
+
+function textQuotes(q) {
+  const nonEmpty = q.answers
+    .map((v, i) => ({ v: v.trim(), i }))
+    .filter((o) => o.v.length > 0);
+  if (nonEmpty.length === 0) return `<div class="no-answers">No responses provided.</div>`;
+  return nonEmpty
+    .map(
+      (o) =>
+        `<div class="quote"><span class="rlabel">R${o.i + 1}:</span>${escapeHtml(o.v).replace(/\n/g, "<br>")}</div>`
+    )
+    .join("");
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function renderQuestion(q) {
+  let body = "";
+  if (q.type === "scale5") body = scaleBar(q);
+  else if (q.type === "percent") body = percentList(q);
+  else if (q.type === "choice") body = choiceList(q);
+  else if (q.type === "text") body = textQuotes(q);
+  return `<div class="q-card">
+    <div class="q-meta">Q${q.id}</div>
+    <div class="q-text">${escapeHtml(q.text)}</div>
+    ${body}
+  </div>`;
+}
+
+const contentEl = document.getElementById("content");
+const navEl = document.getElementById("jump-nav");
+let html = "";
+let navHtml = "";
+for (const key of Object.keys(SECTIONS_META)) {
+  const qs = QUESTIONS.filter((q) => q.section === key);
+  navHtml += `<a href="#sec-${key}">${key}</a>`;
+  html += `<section class="block" id="sec-${key}">
+    <h2 class="section-title">${SECTIONS_META[key]}</h2>
+    ${qs.map(renderQuestion).join("")}
+  </section>`;
+}
+navEl.innerHTML = navHtml;
+contentEl.innerHTML = html;
+</script>
+</body>
+</html>
